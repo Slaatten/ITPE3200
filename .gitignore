@@ -27,3 +27,8 @@ env/
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# Ignorerer .NET build-output
+bin/
+obj/
+
