@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+*.egg-info/
+.eggs/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.coverage*
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Environments
+.venv/
+**/.venv/
+venv/
+env/
+
+# UV / misc
+.uv/
+# behold .python-version i repoet for reproduksjon
+
+# OS
+Thumbs.db
+desktop.ini
+.DS_Store
