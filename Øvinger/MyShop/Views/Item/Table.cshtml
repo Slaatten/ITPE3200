@@ -1,0 +1,49 @@
+@model IEnumerable<MyShop.Models.Item>
+<!-- Forteller at viewet skal få en liste av Item-objekter -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <!-- Gjør at siden tilpasses skjermstørrelse (mobilvennlig) -->
+
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" />
+    <!-- Laster inn Bootstrap CSS for enkel styling -->
+
+    <title>My Shop</title>
+
+</head>
+
+<body>
+    <div class="container">
+        <!-- Bootstrap container for å sentrere og gi marginer -->
+
+        <h1>@ViewBag.CurrentViewName</h1>
+        <!-- Viser en overskrift, teksten kommer fra controller via ViewBag -->
+
+        <table class="table table-striped">
+            <!-- Bootstrap tabell med stripete rader -->
+
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Description</th>
+                <!-- Tabelloverskrifter for kolonnene -->
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.ItemId</td> <!-- Viser ItemId -->
+                    <td>@item.Name</td> <!-- Viser Navn -->
+                    <td>@item.Price.ToString("0.00 NOK")</td> <!-- Viser pris med 2 desimaler + NOK -->
+                    <td>@item.Description</td> <!-- Viser beskrivelse -->
+                </tr>
+            }
+        </table>
+    </div>
+</body>
+
+</html>
