@@ -1,29 +1,27 @@
-@model IEnumerable<MyShop.Models.Item>
-<!-- Forteller at viewet skal få en liste av Item-objekter -->
+@model ItemsViewModel
+
+
+<h1>List of Shop Items (@Model.CurrentViewName View)</h1>
+
+
+<a href="/Item/Grid">Grid View</a>
+
 <div class="container">
-    <!-- Bootstrap container for å sentrere og gi marginer -->
-
-    <h1>@ViewBag.CurrentViewName</h1>
-    <!-- Viser en overskrift, teksten kommer fra controller via ViewBag -->
-
     <table class="table table-striped">
-        <!-- Bootstrap tabell med stripete rader -->
-
         <tr>
             <th>Id</th>
             <th>Name</th>
             <th>Price</th>
             <th>Description</th>
-            <!-- Tabelloverskrifter for kolonnene -->
         </tr>
 
-        @foreach (var item in Model)
+        @foreach (var item in Model.Items)
         {
             <tr>
-                <td>@item.ItemId</td> <!-- Viser ItemId -->
-                <td>@item.Name</td> <!-- Viser Navn -->
-                <td>@item.Price.ToString("0.00 NOK")</td> <!-- Viser pris med 2 desimaler + NOK -->
-                <td>@item.Description</td> <!-- Viser beskrivelse -->
+                <td>@item.ItemId</td>
+                <td>@item.Name</td>
+                <td>@item.Price.ToString("0.00 NOK")</td>
+                <td>@item.Description</td>
             </tr>
         }
     </table>
