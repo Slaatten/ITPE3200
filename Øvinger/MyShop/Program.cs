@@ -14,6 +14,8 @@ if (app.Environment.IsDevelopment())
     // Viser detaljerte feilmeldinger i nettleseren (nyttig under utvikling)
 }
 
+app.UseStaticFiles();
+
 app.MapDefaultControllerRoute();
 // Setter opp standard routing: /{controller=Home}/{action=Index}/{id?}
 // Betyr f.eks. at "/Item/Table" kjører Table()-metoden i ItemController
