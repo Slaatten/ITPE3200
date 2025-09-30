@@ -35,6 +35,24 @@ namespace MyShop.Controllers
             return View(item);
         }
 
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(Item item)
+        {
+            if (ModelState.IsValid)
+            {
+                _itemDbContext.Items.Add(item);
+                _itemDbContext.SaveChanges();
+                return RedirectToAction(nameof(Table));
+            }
+            return View(item);
+        }
         public List<Item> GetItems()
         {
             var items = new List<Item>();
