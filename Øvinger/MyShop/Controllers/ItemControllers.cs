@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using MyShop.Models;
 using MyShop.ViewModels;
@@ -8,18 +6,33 @@ namespace MyShop.Controllers
 {
     public class ItemController : Controller
     {
+        private readonly ItemDbContext _itemDbContext;
+
+        public ItemController(ItemDbContext itemDbContext)
+        {
+            _itemDbContext = itemDbContext;
+        }
         public IActionResult Table()
         {
-            var items = GetItems();
+            List<Item> items = _itemDbContext.Items.ToList();
             var itemsViewModel = new ItemsViewModel(items, "Table");
             return View(itemsViewModel);
         }
 
         public IActionResult Grid()
         {
-            var items = GetItems();                   // Henter data fra egen metode
+            List<Item> items = _itemDbContext.Items.ToList();
             var itemsViewModel = new ItemsViewModel(items, "Grid");        // Gir ViewBag beskjed om at dette er tabellvisning
             return View(itemsViewModel);                       // Sender listen til Grid.cshtml
+        }
+
+        public IActionResult Details(int id)
+        {
+            List<Item> items = _itemDbContext.Items.ToList();
+            var item = items.FirstOrDefault(i => i.ItemId == id);
+            if (item == null)
+                return NotFound();
+            return View(item);
         }
 
         public List<Item> GetItems()
@@ -32,7 +45,7 @@ namespace MyShop.Controllers
                 Name = "Pizza",
                 Price = 150,
                 Description = "Delicious Italian dish with a thin crust topped with tomato sauce, cheese, and various toppings.",
-                ImageUrl = "pizza.jpg"
+                ImageUrl = "/images/pizza.jpg"
             };
 
             var item2 = new Item
@@ -41,7 +54,7 @@ namespace MyShop.Controllers
                 Name = "Fried Chicken Leg",
                 Price = 90,
                 Description = "Crispy fried chicken leg with seasoning and spices.",
-                ImageUrl = "fishandchips.jpg"
+                ImageUrl = "/images/fishandchips.jpg"
             };
 
             var item3 = new Item
@@ -50,7 +63,7 @@ namespace MyShop.Controllers
                 Name = "Tacos",
                 Price = 120,
                 Description = "Mexican style tacos with beef, lettuce, and salsa.",
-                ImageUrl = "tacos.jpg"
+                ImageUrl = "/images/tacos.jpg"
             };
 
             // Legg til flere varer hvis du vil (4–8) for å fylle ut listen
