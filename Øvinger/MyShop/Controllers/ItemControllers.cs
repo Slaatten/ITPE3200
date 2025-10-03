@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore; // <-- for async EF-metoder
 using MyShop.Models;
 using MyShop.ViewModels;
 
@@ -12,96 +13,97 @@ namespace MyShop.Controllers
         {
             _itemDbContext = itemDbContext;
         }
-        public IActionResult Table()
+
+        // GET: /Item/Table
+        public async Task<IActionResult> Table()
         {
-            List<Item> items = _itemDbContext.Items.ToList();
+            List<Item> items = await _itemDbContext.Items.ToListAsync();
             var itemsViewModel = new ItemsViewModel(items, "Table");
             return View(itemsViewModel);
         }
 
-        public IActionResult Grid()
+        // GET: /Item/Grid
+        public async Task<IActionResult> Grid()
         {
-            List<Item> items = _itemDbContext.Items.ToList();
-            var itemsViewModel = new ItemsViewModel(items, "Grid");        // Gir ViewBag beskjed om at dette er tabellvisning
-            return View(itemsViewModel);                       // Sender listen til Grid.cshtml
+            List<Item> items = await _itemDbContext.Items.ToListAsync();
+            var itemsViewModel = new ItemsViewModel(items, "Grid");
+            return View(itemsViewModel);
         }
 
-        public IActionResult Details(int id)
+        // GET: /Item/Details/5
+        public async Task<IActionResult> Details(int id)
         {
-            List<Item> items = _itemDbContext.Items.ToList();
-            var item = items.FirstOrDefault(i => i.ItemId == id);
-            if (item == null)
-                return NotFound();
+            var item = await _itemDbContext.Items
+                .FirstOrDefaultAsync(i => i.ItemId == id);
+
+            if (item == null) return NotFound();
             return View(item);
         }
 
-
+        // GET: /Item/Create  (ikke async – ingen DB-kall)
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
+        // POST: /Item/Create
         [HttpPost]
-        public IActionResult Create(Item item)
+        public async Task<IActionResult> Create(Item item)
         {
             if (ModelState.IsValid)
             {
                 _itemDbContext.Items.Add(item);
-                _itemDbContext.SaveChanges();
+                await _itemDbContext.SaveChangesAsync();
                 return RedirectToAction(nameof(Table));
             }
             return View(item);
         }
 
+        // GET: /Item/Update/5
         [HttpGet]
-        public IActionResult Update(int id)
+        public async Task<IActionResult> Update(int id)
         {
-            var item = _itemDbContext.Items.Find(id);
-            if (item == null)
-            {
-                return NotFound();
-            }
+            var item = await _itemDbContext.Items.FindAsync(id);
+            if (item == null) return NotFound();
             return View(item);
         }
 
+        // POST: /Item/Update
         [HttpPost]
-        public IActionResult Update(Item item)
+        public async Task<IActionResult> Update(Item item)
         {
             if (ModelState.IsValid)
             {
                 _itemDbContext.Items.Update(item);
-                _itemDbContext.SaveChanges();
+                await _itemDbContext.SaveChangesAsync();
                 return RedirectToAction(nameof(Table));
             }
             return View(item);
         }
 
+        // GET: /Item/Delete/5
         [HttpGet]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var item = _itemDbContext.Items.Find(id);
-            if (item == null)
-            {
-                return NotFound();
-            }
+            var item = await _itemDbContext.Items.FindAsync(id);
+            if (item == null) return NotFound();
             return View(item);
         }
 
+        // POST: /Item/DeleteConfirmed/5
         [HttpPost]
-        public IActionResult DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var item = _itemDbContext.Items.Find(id);
-            if (item == null)
-            {
-                return NotFound();
-            }
+            var item = await _itemDbContext.Items.FindAsync(id);
+            if (item == null) return NotFound();
+
             _itemDbContext.Items.Remove(item);
-            _itemDbContext.SaveChanges();
+            await _itemDbContext.SaveChangesAsync();
             return RedirectToAction(nameof(Table));
         }
 
-
+        // Demo-data – ikke DB, kan stå som før
         public List<Item> GetItems()
         {
             var items = new List<Item>();
@@ -133,11 +135,7 @@ namespace MyShop.Controllers
                 ImageUrl = "/images/tacos.jpg"
             };
 
-            // Legg til flere varer hvis du vil (4–8) for å fylle ut listen
-            items.Add(item1);
-            items.Add(item2);
-            items.Add(item3);
-
+            items.AddRange(new[] { item1, item2, item3 });
             return items;
         }
     }
